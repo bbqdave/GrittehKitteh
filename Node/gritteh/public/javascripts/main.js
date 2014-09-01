@@ -2,30 +2,42 @@ $(document).ready(function(){
 	// get the initial load
 	//initialize the slider
 	//sandbox.spacebrew.cc
-	var sb = new Spacebrew.Client( 'sandbox.spacebrew.cc', "KittehCattroller_JS", "Connecting for Cattroller" );
-	
+	var sb = new Spacebrew.Client( '127.0.0.1', "KittehCattroller_JS", "Connecting for Cattroller" );
+
 	var loader = $('.cover');
+
+	var isSaving = false;
+
+	var isSliding = false;
 
 	sb.onStringMessage = function onString( name, value ) 
 	{
 		console.log("got the message"+name+" "+value);
-		if(name=="scroll")
+		if(name =="selection" && value == "scroll")
 		{
 			nextItem();
 		}
 
-		if(name == "select")
+		if(name == "selection" && value =="select")
 		{
 
 			saveItem();
 		}
 	};
-	sb.addPublish("scroll","string");
-	sb.addPublish("select","string");
-	sb.addSubscribe( "scroll","string" );
-	sb.addSubscribe( "select","string" );
+	sb.addPublish("download","string");
+	sb.addSubscribe("selection","string");
+	
+	sb.connect({reconnect:true,port:'9000'});
 
-	sb.connect();
+	sb.onOpen = function(){
+
+		console.log("connected");
+	}
+
+	sb.onClose = function(evt){
+
+		console.log("closed")
+	}
 
 
 	$('.stacey').click(function(event)
@@ -47,6 +59,7 @@ $(document).ready(function(){
   		cssEase: 'linear',
   		onAfterChange:function(obj)
   		{
+  			isSliding = false;
   			var currentSlide = obj.currentSlide;
   			if(currentSlide == obj.slideCount-1)
   			{
@@ -60,12 +73,16 @@ $(document).ready(function(){
 
 	function nextItem()
 	{
-		//slider.slickNext();
-		saveItem();
+		if(!isSliding){
+			slider.slickNext();
+		}
+		
 	}
 
 	function saveItem(){
 
+		if(isSaving){return;}
+		isSaving = true;
 		$('.cover').addClass('cover-fade-up');
 		var slide = $('.slick-active');
 		var url = $(slide).find('img').attr('src');
@@ -75,6 +92,7 @@ $(document).ready(function(){
 		$.getJSON( serviceUrl, function( data ) {
 			console.log("shit done already")
 			$('.cover').addClass("cover-fade-down");
+			isSaving = false;
 		});
 
 	}

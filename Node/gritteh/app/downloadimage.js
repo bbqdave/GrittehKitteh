@@ -63,7 +63,7 @@ var saveImage = function(uri,complete)
         {
             writeFile(name,data,callback);
         },
-        ], console.log("com");complete(true), 
+        ], complete(true), 
         function(err){
             console.log("complete");
             complete(false);
