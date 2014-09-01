@@ -1,0 +1,121 @@
+body {
+  padding: 50px;
+  font: 14px "Roboto", Helvetica, Arial, sans-serif;
+  font-weight:700;
+
+}
+
+a {
+  color: #00B7FF;
+}
+
+.show{
+	display:block;
+}
+
+.hide{
+	display:none;
+}
+.slick-slide img{
+	width:640px;
+	margin:0 auto;
+}
+.spinner {
+ 
+  margin: 295px auto;
+  width: 50px;
+  height: 30px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.cover{
+
+	opacity:0;
+	width:640px;
+	height:640px;
+	background-color: rgba(0, 0, 0, 0.6);
+
+	color: rgba(0, 0, 0, 0.6);
+	
+	position:absolute;
+	z-index:10;
+	left:50%;
+	margin-left:-320px;
+}
+
+.cover-fade-up{
+
+	 opacity: 1;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+     
+}
+
+.cover-fade-down{
+
+	 opacity: 0;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+      -webkit-transition-delay: 2s; /* Safari */
+    transition-delay: 2s;
+}
+
+.cover p{
+
+font-family:'Roboto';
+text-align: center;
+width: 640px;
+position: absolute;
+top: 340px;
+color: #ffffff;
+text-transform: uppercase;
+}
+
+
+.spinner > div {
+  background-color: rgba(231, 76, 60,1.0);
+  height: 100%;
+  width: 6px;
+  display: inline-block;
+  
+  -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+  animation: stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+}
+
+@-webkit-keyframes stretchdelay {
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }  
+  20% { -webkit-transform: scaleY(1.0) }
+}
+
+@keyframes stretchdelay {
+  0%, 40%, 100% { 
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  }  20% { 
+    transform: scaleY(1.0);
+    -webkit-transform: scaleY(1.0);
+  }
+}

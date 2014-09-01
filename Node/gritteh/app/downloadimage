@@ -1,0 +1,135 @@
+
+
+var express = require('express');
+var async = require('async');
+
+ var Dropbox = require("dropbox");
+    var client = new Dropbox.Client({
+        key: "84n8zb00nyityxp",
+        secret: "hg9omyp4n22cgz1"
+    });
+
+
+    client.authDriver(new Dropbox.AuthDriver.NodeServer(3000));
+
+var showError = function(error) {
+
+  switch (error.status) {
+  case Dropbox.ApiError.INVALID_TOKEN:
+    // If you're using dropbox.js, the only cause behind this error is that
+    // the user token expired.
+    // Get the user through the authentication flow again.
+    break;
+
+  case Dropbox.ApiError.NOT_FOUND:
+    // The file or folder you tried to access is not in the user's Dropbox.
+    // Handling this error is specific to your application.
+    break;
+
+  case Dropbox.ApiError.OVER_QUOTA:
+    // The user is over their Dropbox quota.
+    // Tell them their Dropbox is full. Refreshing the page won't help.
+    break;
+
+  case Dropbox.ApiError.RATE_LIMITED:
+    // Too many API requests. Tell the user to try again later.
+    // Long-term, optimize your code to use fewer API calls.
+    break;
+
+  case Dropbox.ApiError.NETWORK_ERROR:
+    // An error occurred at the XMLHttpRequest layer.
+    // Most likely, the user's network connection is down.
+    // API calls will not succeed until the user gets back online.
+    break;
+
+  case Dropbox.ApiError.INVALID_PARAM:
+  case Dropbox.ApiError.OAUTH_ERROR:
+  case Dropbox.ApiError.INVALID_METHOD:
+  default:
+    // Caused by a bug in dropbox.js, in your application, or in Dropbox.
+    // Tell the user an error occurred, ask them to refresh the page.
+  }
+};
+var saveImage = function(uri,complete)
+{
+    async.waterfall([
+        function(callback){
+          getImage(uri,callback);
+        },
+        function(name,callback){
+            readFile(name,callback);
+        },
+        function(name,data,callback)
+        {
+            writeFile(name,data,callback);
+        },
+        ], console.log("com");complete(true), 
+        function(err){
+            console.log("complete");
+            complete(false);
+
+        });
+}
+
+var readFile = function(name,callback){
+    var fs = require('fs');
+    fs.readFile(name, function(error, data) {
+        // No encoding passed, readFile produces a Buffer instance
+        if (error){
+                    
+        }
+        fs.unlinkSync(name);
+        console.log("read file and deleted");
+        callback(null,name,data);
+    });
+}
+var getImage=function(uri,callback) {
+    
+    var request = require('request');
+    var url = require('url');
+    var path = require('path');
+    var fs = require('fs');
+ 
+    request(uri, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            var name ="cat"+new Date().getTime()+".jpg";
+			var r = request(uri).pipe(fs.createWriteStream(name));
+			r.on('finish', function () {
+			     console.log("finished getting the image")
+                 callback(null,name);
+
+			});
+          
+        }else{
+
+            return(false);
+        }
+    });
+
+}
+
+var writeFile = function(name,data,callback)
+{
+    console.log("write file stacey");
+   
+    client.authenticate(function(error, client) {
+        if (error) {
+            console.log("error");
+        }
+
+        client.writeFile(name, data, function(error, stat) {
+            if (error) {
+                console.log("error writing"+error)
+            }
+            
+            console.log("writing file"+stat);
+
+            callback(null);
+        // The image has been succesfully written.
+        });
+    });
+}
+
+
+module.exports.getImage = getImage;
+module.exports.saveImage = saveImage;
