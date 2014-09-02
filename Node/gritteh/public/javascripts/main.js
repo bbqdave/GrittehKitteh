@@ -101,16 +101,16 @@ $(document).ready(function(){
 
 	function getResults()
 	{
-		console.log("sht")
+		$('.cover').addClass('cover-fade-up');
 		var serviceUrl = "http://localhost:3000/images/"+encodeURIComponent(url);
 	
 		$.getJSON( serviceUrl, function( data ) {
-			console.log(data);
+			$('.cover').addClass('cover-fade-down');
 			url = data.pagination.next_url;
   			var len = data.data.length;
   			var d = data.data;
   			// remove slides
-  			console.log('stacey',slider)
+  		
   			var items = $('.slick-slide');
   			if(items.length)
   			{
@@ -123,7 +123,7 @@ $(document).ready(function(){
 	  				}
 
   			}
-
+       
 		for(var i=0;i<len;i++)
 		{
 			var image = d[i].images.standard_resolution;
@@ -132,6 +132,8 @@ $(document).ready(function(){
 			slider.slickAdd(html)
 			
 		}
+
+
 	})	
 
 	}
